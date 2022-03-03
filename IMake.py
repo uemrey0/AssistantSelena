@@ -25,37 +25,48 @@ def check_internet():
         print("İnternet bağlantısı yok.")
         playsound("noconnection.mp3")
     return False
-
-if check_internet() != True:
-    sys.exit()
-else:
-    print("Asistan'a Hoşgeldiniz.")
-    playsound("welcome_msg.mp3")
-    user= input("Adınızı Giriniz:")
-    welcomeMSG = "Merhaba {} Asistan'a Hoşgeldin. Ben senin kişisel asistanın Selena".format(user)
-    welcome_msg(welcomeMSG)
-    #Network check
-
-while check_internet():
+def listen():
     with sr.Microphone() as source:
-        print ("Seni Dinliyorum...")
+        print("Seni Dinliyorum...")
         playsound('senidinliyorum.mp3')
         audio = r.listen(source)
 
     data = ""
     try:
         data = r.recognize_google(audio, language='tr')
-        for selena in data:
-            if selena in "SELENA":
-                isSelena = True
-        if(isSelena):
-            print(data)
-            command = Command(data)
-            command.findCommand()
-            time.sleep(1)
-        else:
-            print(isSelena)
-
+        print(data)
+        command = Command(data)
+        command.findCommand()
+        time.sleep(1)
+        isSelena = False
     except sr.UnknownValueError:
         print("Üzgünüm Dostun ne dediğini anlamadım :(")
         playsound('error.mp3')
+        isSelena = True
+
+if check_internet() != True:
+    sys.exit()
+else:
+    print("Asistan'a Hoşgeldiniz.")
+    #playsound("welcome_msg.mp3")
+    #user= input("Adınızı Giriniz:")
+    #welcomeMSG = "Merhaba {} Asistan'a Hoşgeldin. Ben senin kişisel asistanın Selena".format(user)
+    #welcome_msg(welcomeMSG)
+    #Network check
+
+isSelena = False
+while check_internet():
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+    data = ""
+    try:
+        if(isSelena == False):
+            data = r.recognize_google(audio, language='tr')
+            print(data)
+            sound = data.upper()
+            soundBlocks = sound.split()
+            if "SELENA" in soundBlocks:
+                listen()
+            time.sleep(1)
+    except sr.UnknownValueError:
+        print(sr.UnknownValueError)

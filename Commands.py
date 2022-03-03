@@ -29,6 +29,8 @@ class Command():
         os.remove(fileName)
 
     #KOMUT İŞLEVLERİ
+    def anlamadim(self):
+        self.speak("Buna nasıl cevap vericeğimi bilmiyorum.")
     def kapat(self):
         self.speak("Kapatıyorum yakışıklı sonra görüşmek üzere ;)")
         sys.exit()
@@ -43,10 +45,17 @@ class Command():
 
     # İŞLEVSEL
     def findCommand(self):
+        i = 0
         for command in self.commands:
             if command in self.soundBlocks:
                 self.commandRun(command)
+            else:
+                i = i+1
+        if len(self.soundBlocks) == i:
+            self.commandRun("ANLAMADIM")
     def commandRun(self, command):
+        if command == "ANLAMADIM":
+            self.anlamadim()
         if command == "KAPAT":
             self.kapat()
         if command == "NASILSIN":
