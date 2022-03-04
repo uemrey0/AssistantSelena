@@ -23,7 +23,7 @@ class Command():
         self.soundBlocks = self.sound
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
-        self.commands = ["NASILSIN", "KAPAT", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", ""]
+        self.commands = ["NASILSIN", "KAPAT", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA"]
 
     # KONUŞMA
 
@@ -110,6 +110,34 @@ class Command():
         wordchoose = choice(joke)
         self.speak(wordchoose)
 
+    def havadurumu(self):
+        city_name = self.listen("Hangi şehir?").lower()
+        api_key = "f91fa0205e7baf9a0bbeca8a3ccc6976"
+        base_url = "http://api.openweathermap.org/data/2.5/weather?lang=tr&"
+        complete_url = base_url + "appid=" + api_key + "&q=" + city_name
+        response = requests.get(complete_url)
+        x = response.json()
+        if x["cod"] != "404":
+            y = x["main"]
+            current_temperature = y["temp"]
+            feels_like = y["feels_like"]
+            z = x["weather"]
+            weather_description = z[0]["description"]
+            min = y["temp_min"]
+            max = y["temp_max"]
+            if "BUGÜN" in self.soundBlocks:
+                self.speak(city_name + "bugün en yüksek sıcaklık " + str(
+                    round(max - 273.15)) + "; en yüksek " + str(
+                    round(max - 273.15)) + " santigrat derece\n ve " + str(
+                    weather_description))
+            else:
+                self.speak(city_name + "için sıcaklık " + str(
+                    round(current_temperature - 273.15)) + "; hissedilen " + str(
+                    round(feels_like - 273.15)) + " santigrat derece\n ve " + str(
+                    weather_description))
+        else:
+            self.speak("Bir hata oluştu")
+
     # İŞLEVSEL
     def findCommand(self):
         i = 0
@@ -146,3 +174,6 @@ class Command():
 
         if command == "ŞAKA" or command == "KOMİKLİK" or command == "FIKRA":
             self.joke()
+
+        if command == "HAVA":
+            self.havadurumu()
