@@ -6,6 +6,7 @@ from gtts import gTTS
 import os
 import requests
 import sys
+import wikipedia
 r = sr.Recognizer()
 #Welcome MSG
 def welcome_msg(text):
