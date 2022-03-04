@@ -23,7 +23,7 @@ class Command():
         self.soundBlocks = self.sound
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
-        self.commands = ["NASILSIN", "KAPAT", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA"]
+        self.commands = ["NASILSIN", "KAPAT", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", ""]
 
     # KONUŞMA
 
@@ -103,6 +103,13 @@ class Command():
         else:
             query = self.soundBlocks.replace("TARAYICIDA", "").replace("AÇ", "").strip()
         webbrowser.open(query)
+
+    def joke(self):
+        jokes = open("jokes.txt", encoding="utf8")
+        joke = jokes.readlines()
+        wordchoose = choice(joke)
+        self.speak(wordchoose)
+
     # İŞLEVSEL
     def findCommand(self):
         i = 0
@@ -136,3 +143,6 @@ class Command():
 
         if command == "TARAYICIDA":
             self.tarayici()
+
+        if command == "ŞAKA" or command == "KOMİKLİK" or command == "FIKRA":
+            self.joke()
