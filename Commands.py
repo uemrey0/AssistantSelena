@@ -23,7 +23,7 @@ class Command():
         self.soundBlocks = self.sound
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
-        self.commands = ["NASILSIN", "KAPAT", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA"]
+        self.commands = ["NASILSIN", "KAPAT", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA"]
 
     # KONUŞMA
 
@@ -54,7 +54,10 @@ class Command():
 
     #KOMUT İŞLEVLERİ
     def anlamadim(self):
-        self.speak("Buna nasıl cevap vericeğimi bilmiyorum.")
+        anlamadimWords = ["Hmm... Bunun için bir cevabım yok. Yardımcı olabileceğim başka bir konu var mı?",
+                          "Buna nasıl cevap vericeğimi bilmiyorum."]
+        wordchoose = choice(anlamadimWords)
+        self.speak(wordchoose)
     def kapat(self):
         self.speak("Kapatıyorum yakışıklı sonra görüşmek üzere ;)")
         sys.exit()
@@ -161,7 +164,7 @@ class Command():
         if command == "SAAT KAÇ" or command == "SAATİ SÖYLE":
             self.saat()
 
-        if command == "WIKIPEDIA":
+        if command == "WIKIPEDIA" or command == "VIKIPEDI":
             self.wikipedia()
 
         if command == "GOOGLE AÇ" or command == "GOOGLE\'I AÇ":
