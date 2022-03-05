@@ -20,6 +20,7 @@
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
@@ -100,7 +101,7 @@
       <workItem from="1646397535313" duration="579000" />
       <workItem from="1646472307368" duration="1122000" />
       <workItem from="1646473483936" duration="3143000" />
-      <workItem from="1646483101530" duration="4270000" />
+      <workItem from="1646483101530" duration="6201000" />
     </task>
     <servers />
   </component>
