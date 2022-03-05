@@ -28,6 +28,8 @@ def check_internet():
     return False
 def listen():
     with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
+        print("Arka plan gürültüsü:" + str(r.energy_threshold))
         print("Seni Dinliyorum...")
         playsound('senidinliyorum.mp3')
         audio = r.listen(source)
@@ -58,6 +60,8 @@ else:
 isSelena = False
 while check_internet():
     with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
+        print("Arka plan gürültüsü:" + str(r.energy_threshold))
         audio = r.listen(source)
     data = ""
     try:

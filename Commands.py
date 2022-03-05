@@ -38,6 +38,8 @@ class Command():
 
     def listen(self, txt):
         with sr.Microphone() as source:
+            self.r.adjust_for_ambient_noise(source)
+            print("Arka plan gürültüsü:" + str(self.r.energy_threshold))
             print(txt)
             self.speak(txt)
             audio = self.r.listen(source)
