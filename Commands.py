@@ -1,3 +1,4 @@
+from gettext import translation
 import urllib.request
 import json
 import pandas as pd
@@ -9,9 +10,11 @@ from random import choice, randrange
 import os
 import sys
 import datetime
-import time
+import googletrans
+from googletrans import Translator
 import wikipedia
 import requests
+import wolframalpha as wa
 from lxml import html
 
 
@@ -19,8 +22,8 @@ class Command():
 
     def __init__(self, inSound):
         self.r = sr.Recognizer()
-        self.sound = inSound.upper()
-        self.soundBlocks = self.sound
+        self.sound = inSound
+        self.soundBlocks = self.sound.upper()
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
         self.commands = ["NASILSIN", "KAPAT", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA"]
@@ -55,6 +58,21 @@ class Command():
 
 
     #KOMUT İŞLEVLERİ
+    def translate(self, txt, to):
+        translator = Translator()
+        trans = translator.translate(txt,dest=to)
+        print (trans.text)
+        return trans.text
+    def wolframSearch(self, query):
+        app_id = "API_KEY"
+        client = wa.Client(app_id)
+        res = client.query(self.translate(query,"en"))
+        try:
+            answer = next(res.results).text
+            print(answer)
+            return self.translate(answer,"tr")
+        except StopIteration:
+            return "404"
     def anlamadim(self):
         anlamadimWords = ["Hmm... Bunun için bir cevabım yok. Yardımcı olabileceğim başka bir konu var mı?",
                           "Buna nasıl cevap vericeğimi bilmiyorum."]
@@ -155,7 +173,11 @@ class Command():
             else:
                 i = i+1
         if len(self.commands) == i:
-            self.commandRun("ANLAMADIM")
+            answer = self.wolframSearch(self.sound)
+            if(answer != "404"):
+                self.speak(answer)
+            else:
+                self.commandRun("ANLAMADIM")
     def commandRun(self, command):
         if command == "ANLAMADIM":
             self.anlamadim()
