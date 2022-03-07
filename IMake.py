@@ -10,7 +10,7 @@ import wikipedia
 r = sr.Recognizer()
 #Welcome MSG
 def welcome_msg(text):
-    fileName = "welcome.mp3"
+    fileName = "src/sound/welcome.mp3"
     tts = gTTS(text=text, lang="tr")
     tts.save(fileName)
     print(text)
@@ -24,14 +24,14 @@ def check_internet():
         return True
     except requests.ConnectionError:
         print("İnternet bağlantısı yok.")
-        playsound("noconnection.mp3")
+        playsound("src/sound/noconnection.mp3")
     return False
 def listen():
     with sr.Microphone() as source:
         r.adjust_for_ambient_noise(source)
         print("Arka plan gürültüsü:" + str(r.energy_threshold))
         print("Seni Dinliyorum...")
-        playsound('senidinliyorum.mp3')
+        playsound('src/sound/senidinliyorum.mp3')
         audio = r.listen(source)
 
     data = ""
@@ -44,7 +44,7 @@ def listen():
         isSelena = False
     except sr.UnknownValueError:
         print("Üzgünüm Dostun ne dediğini anlamadım :(")
-        playsound('error.mp3')
+        playsound('src/sound/error.mp3')
         isSelena = True
 
 if check_internet() != True:
