@@ -15,6 +15,8 @@ from googletrans import Translator
 import wikipedia
 import requests
 import wolframalpha as wa
+from subprocess import call
+import osascript
 from lxml import html
 
 
@@ -26,7 +28,7 @@ class Command():
         self.soundBlocks = self.sound.upper()
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
-        self.commands = ["NASILSIN", "KAPAT", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA"]
+        self.commands = ["NASILSIN", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "KAPAT",]
 
     # KONUŞMA
 
@@ -153,8 +155,8 @@ class Command():
             max = y["temp_max"]
             if "BUGÜN" in self.soundBlocks:
                 self.speak(city_name + "bugün en yüksek sıcaklık " + str(
-                    round(max - 273.15)) + "; en yüksek " + str(
-                    round(max - 273.15)) + " santigrat derece\n ve " + str(
+                    round(max - 273.15)) + "; en düşük " + str(
+                    round(min - 273.15)) + " santigrat derece\n ve " + str(
                     weather_description))
             else:
                 self.speak(city_name + "için sıcaklık " + str(
@@ -163,13 +165,47 @@ class Command():
                     weather_description))
         else:
             self.speak("Bir hata oluştu")
-
+    def systemVolume(self, op):
+        result = osascript.osascript('get volume settings')
+        print(result)
+        print(type(result))
+        volInfo = result[1].split(',')
+        outputVol = volInfo[0].replace('output volume:', '')
+        target_volume = int(outputVol)
+        if op == "increase":
+            target_volume += 20
+        elif op == "decrease":
+            target_volume -= 20
+        elif op == "max":
+            target_volume = 100
+        elif op == "min":
+            target_volume = 0
+        else:
+            target_volume = op
+        if target_volume<0:
+            target_volume = 0
+        elif target_volume>100:
+            target_volume = 100
+        osascript.osascript("set volume output volume {}".format(str(target_volume)))
+        self.speak("Tamam")  
+    def ses(self):
+        if "AZALT" in self.soundBlocks or "KIS" in self.soundBlocks or "DÜŞÜR" in self.soundBlocks or "İNDİR" in self.soundBlocks or "AŞAĞI" in self.soundBlocks:
+            op = "decrease"
+        elif "YÜKSELT" in self.soundBlocks or "YUKARI" in self.soundBlocks or "ARTTIR" in self.soundBlocks or "YÜKSELT" in self.soundBlocks:
+            op = "increase"
+        elif "YÜKSEK" in self.soundBlocks or "FULLE" in self.soundBlocks or "KÖKLE" in self.soundBlocks or "SON" in self.soundBlocks or "100" in self.soundBlocks or "YÜZ" in self.soundBlocks:
+            op = "max"
+        elif "SUSTUR" in self.soundBlocks or "KAPAT" in self.soundBlocks or "SESSİZ" in self.soundBlocks or "0" in self.soundBlocks or "SIFIR" in self.soundBlocks:
+            op = "min"
+        print(op)
+        self.systemVolume(op)
     # İŞLEVSEL
     def findCommand(self):
         i = 0
         for command in self.commands:
             if command in self.soundBlocks:
                 self.commandRun(command)
+                break
             else:
                 i = i+1
         if len(self.commands) == i:
@@ -207,3 +243,6 @@ class Command():
 
         if command == "HAVA":
             self.havadurumu()
+        
+        if command == "SES":
+            self.ses()
