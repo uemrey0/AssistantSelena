@@ -5,7 +5,7 @@ import webbrowser
 from gtts import gTTS
 from playsound import playsound
 import speech_recognition as sr
-from random import choice
+from random import choice, randrange
 import os
 import sys
 import datetime
@@ -50,7 +50,7 @@ class Command():
             print(data)
         except sr.UnknownValueError:
             print("Üzgünüm Dostun ne dediğini anlamadım :(")
-            playsound('error.mp3')
+            playsound('src/sound/error.mp3')
         return data.lower()
 
 
@@ -110,10 +110,13 @@ class Command():
         webbrowser.open(query)
 
     def joke(self):
-        jokes = open("jokes.txt", encoding="utf8")
+        jokes = open("src/txt/jokes.txt", encoding="utf8")
         joke = jokes.readlines()
         wordchoose = choice(joke)
         self.speak(wordchoose)
+        rand = randrange(1,3)
+        print(rand)
+        playsound("src/sound/jokesound"+str(rand)+".mp3")
 
     def havadurumu(self):
         city_name = self.listen("Hangi şehir?").lower()
