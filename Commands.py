@@ -17,8 +17,9 @@ import requests
 import wolframalpha as wa
 from subprocess import call
 import osascript
+import speedtest
 from lxml import html
-
+from engiene.spell import Spelling
 
 class Command():
 
@@ -28,7 +29,7 @@ class Command():
         self.soundBlocks = self.sound.upper()
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
-        self.commands = ["NASILSIN", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "KAPAT",]
+        self.commands = ["NASILSIN", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "HIZ", "HECELE", "KAPAT"]
 
     # KONUŞMA
 
@@ -199,6 +200,15 @@ class Command():
             op = "min"
         print(op)
         self.systemVolume(op)
+    def speedtest(self):
+        st = speedtest.Speedtest()
+        down = st.download()
+        up = st.upload()
+        ping = st.results.ping
+        self.speak("İndirme hızı {}, Yükleme hızı {} ve gecikme {}".format(down,up,ping))
+    def hecele(self):
+        word = self.listen("Hangi kelimeyi hecelememi istiyorsun?")
+        self.speak(Spelling.spellword(word))
     # İŞLEVSEL
     def findCommand(self):
         i = 0
@@ -246,3 +256,9 @@ class Command():
         
         if command == "SES":
             self.ses()
+        
+        if command == "HIZ":
+            self.speedtest()
+        
+        if command == "HECELE":
+            self.hecele()
