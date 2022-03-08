@@ -17,7 +17,7 @@ Selena is a voice commanding assistant service in Python 3.10 It can recognize h
 - (NEW) Increase/decrease the speakers master volume (also can set max/mute speakers volume) \*\* (e.g 'Selena sesi arttır!')
 - (NEW) Tells the internet speed (ping, uplink and downling) (e.g 'Selena bağlantı hızını söyler misin?')
 - (NEW) Spells a word in Turkish (e.g 'Selena kelime hecele. - Ananas')
-- (NEW) Do basic calculations (e.g 'Jarvis (5 + 6) \* 8' or 'Selena bir artı bir')
+- (NEW) Do basic calculations (e.g 'Selena bir artı bir')
 - (NEW) Answers in general questions (via call Wolfram API and Google Translate), e.g ('Selena en yüksek bina nerededir?')
 
 ## Assistant Features
