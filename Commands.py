@@ -19,7 +19,7 @@ from subprocess import call
 import osascript
 import speedtest
 from lxml import html
-from engiene.spell import Spelling
+from src.engiene.spell import Spelling
 
 class Command():
 
@@ -202,13 +202,20 @@ class Command():
         self.systemVolume(op)
     def speedtest(self):
         st = speedtest.Speedtest()
-        down = st.download()
-        up = st.upload()
-        ping = st.results.ping
-        self.speak("İndirme hızı {}, Yükleme hızı {} ve gecikme {}".format(down,up,ping))
+        self.speak("Bağlantını kontrol ediyorum, lütfen bekle.")
+        down = round(st.download()/(1024*1024))
+        up = round(st.upload()/(1024*1024))
+        ping = round(st.results.ping)
+        self.speak("Tamam! İndirme hızı {} Mbps, Yükleme hızı {} Mbps ve gecikme {} milisaniye".format(down,up,ping))
     def hecele(self):
         word = self.listen("Hangi kelimeyi hecelememi istiyorsun?")
-        self.speak(Spelling.spellword(word))
+        self.speak("Tamam bir bakalım...")
+        obj = Spelling()
+        spelledList = Spelling.spellword(obj,word)
+        speakWord = " "
+        for x in spelledList:
+            speakWord += x + ". "
+        self.speak("Şu şekilde " + word + ";" + speakWord)
     # İŞLEVSEL
     def findCommand(self):
         i = 0
