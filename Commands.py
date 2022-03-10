@@ -29,7 +29,7 @@ class Command():
         self.soundBlocks = self.sound.upper()
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
-        self.commands = ["NASILSIN", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE\'I AÇ", "GOOGLE AÇ", "GOOGLE\'DA ARA", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "HIZ", "HECELE", "KAPAT"]
+        self.commands = ["NASILSIN", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "HIZ", "HECELE", "KAPAT"]
 
     # KONUŞMA
 
@@ -104,20 +104,24 @@ class Command():
         wikipedia.set_lang("tr")
         results = wikipedia.summary(query, sentences=3)
         self.speak("Wikipedia\'ya göre " + results)
-    def googleac(self):
-        self.speak("Tamam, google açılıyor\n")
-        webbrowser.open("https://www.google.com/")
-    def googleara(self):
-        if(self.soundBlocks.replace("GOOGLE\'DA ARA", "").strip() == ""):
-            while True:
-                query = self.listen('Google\'da ne aramamı istersin?')
-                print(query)
-                if query != "":
-                    break
-            query = query.strip().replace(" ", "+")
+    def google(self):
+        if "AÇ" in self.soundBlocks:
+            self.speak("Tamam, google açılıyor\n")
+            webbrowser.open("https://www.google.com/")
+        elif "ARA"in self.soundBlocks:
+            query = self.soundBlocks.replace("GOOGLE", "").replace("\'DA", "").replace("ARA", "").strip().lower()
+            if(query == ""):
+                while True:
+                    query = self.listen('Google\'da ne aramamı istersin?')
+                    print(query)
+                    if query != "":
+                        break
+                query = query.strip().replace(" ", "+")
+            else:
+                query = query.replace(" ", "+")
+                webbrowser.open("https://www.google.com/search?q=" + query)
         else:
-            query = self.soundBlocks.replace("GOOGLE\'DA ARA", "").strip().replace(" ", "+")
-        webbrowser.open("https://www.google.com/search?q=" + query)
+            self.anlamadim()
     def tarayici(self):
         if (self.soundBlocks.replace("TARAYICIDA", "").replace("AÇ", "").strip() == ""):
             while True:
@@ -247,10 +251,8 @@ class Command():
         if command == "WIKIPEDIA" or command == "VIKIPEDI":
             self.wikipedia()
 
-        if command == "GOOGLE AÇ" or command == "GOOGLE\'I AÇ":
-            self.googleac()
-        if command == "GOOGLE\'DA ARA":
-            self.googleara()
+        if command == "GOOGLE":
+            self.google()
 
         if command == "TARAYICIDA":
             self.tarayici()
