@@ -4,7 +4,7 @@ Selena is a voice commanding assistant service in Python 3.10 It can recognize h
 
 ## Requirements
 
-- Python Version: 3.8.X or hiegher
+- Python Version: 3.10 ![Python version](https://img.shields.io/github/pipenv/locked/python-version/uemrey0/AssistantSelena)
 
 ## Assistant Skills
 
