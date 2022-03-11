@@ -145,14 +145,16 @@ class Command():
         playsound("src/sound/jokesound"+str(rand)+".mp3")
 
     def havadurumu(self):
-        citiesJson = json.load("src/json/cities.json")
+        f = open("src/json/cities.json")
+        citiesJson = json.load(f)
         foundCity = False;
         city_name = ""
         for x in self.soundBlocksSplit:
-            if x.capitalize() in citiesJson:
-                foundCity = True
-                city_name = x.lower()
-                break
+            for y in citiesJson:
+                if x.capitalize() == y["name"]:  
+                    foundCity = True
+                    city_name = x.lower()
+                    break
         if foundCity == False:       
             city_name_split = self.listen("Hangi şehir?").split()
             for x in city_name_split:
@@ -161,19 +163,19 @@ class Command():
                     break
         if city_name != "":
             obj = Weather()
-            cond = obj.getWeather(city_name)
+            cond = Weather.getWeather(city_name)
             current_temperature = cond["curent"]
             feels_like = cond["feels"]
             weather_description = cond["desc"]
             min = cond["min"]
             max = cond["max"]
             if "BUGÜN" in self.soundBlocks:
-                self.speak(city_name + "bugün en yüksek sıcaklık " + str(
+                self.speak(city_name + " bugün en yüksek sıcaklık " + str(
                     round(max - 273.15)) + "; en düşük " + str(
                     round(min - 273.15)) + " santigrat derece\n ve " + str(
                     weather_description))
             else:
-                self.speak(city_name + "için sıcaklık " + str(
+                self.speak(city_name + " için sıcaklık " + str(
                     round(current_temperature - 273.15)) + "; hissedilen " + str(
                     round(feels_like - 273.15)) + " santigrat derece\n ve " + str(
                     weather_description))
