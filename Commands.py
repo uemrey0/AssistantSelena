@@ -29,7 +29,7 @@ class Command():
         self.soundBlocks = self.sound.upper()
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
-        self.commands = ["NASILSIN", "NE HABER", "SAAT KAÇ", "SAATİ SÖYLE", "WIKIPEDIA", "VIKIPEDI", "GOOGLE", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "HIZ", "HECELE", "KAPAT"]
+        self.commands = ["NASILSIN", "NE HABER", "SAAT", "WIKIPEDIA", "VIKIPEDI", "GOOGLE", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "HIZ", "HECELE", "KAPAT"]
 
     # KONUŞMA
 
@@ -145,31 +145,32 @@ class Command():
 
     def havadurumu(self):
         city_name = self.listen("Hangi şehir?").lower()
-        api_key = "f91fa0205e7baf9a0bbeca8a3ccc6976"
-        base_url = "http://api.openweathermap.org/data/2.5/weather?lang=tr&"
-        complete_url = base_url + "appid=" + api_key + "&q=" + city_name
-        response = requests.get(complete_url)
-        x = response.json()
-        if x["cod"] != "404":
-            y = x["main"]
-            current_temperature = y["temp"]
-            feels_like = y["feels_like"]
-            z = x["weather"]
-            weather_description = z[0]["description"]
-            min = y["temp_min"]
-            max = y["temp_max"]
-            if "BUGÜN" in self.soundBlocks:
-                self.speak(city_name + "bugün en yüksek sıcaklık " + str(
-                    round(max - 273.15)) + "; en düşük " + str(
-                    round(min - 273.15)) + " santigrat derece\n ve " + str(
-                    weather_description))
+        if city_name != "":
+            api_key = "f91fa0205e7baf9a0bbeca8a3ccc6976"
+            base_url = "http://api.openweathermap.org/data/2.5/weather?lang=tr&"
+            complete_url = base_url + "appid=" + api_key + "&q=" + city_name
+            response = requests.get(complete_url)
+            x = response.json()
+            if x["cod"] != "404":
+                y = x["main"]
+                current_temperature = y["temp"]
+                feels_like = y["feels_like"]
+                z = x["weather"]
+                weather_description = z[0]["description"]
+                min = y["temp_min"]
+                max = y["temp_max"]
+                if "BUGÜN" in self.soundBlocks:
+                    self.speak(city_name + "bugün en yüksek sıcaklık " + str(
+                        round(max - 273.15)) + "; en düşük " + str(
+                        round(min - 273.15)) + " santigrat derece\n ve " + str(
+                        weather_description))
+                else:
+                    self.speak(city_name + "için sıcaklık " + str(
+                        round(current_temperature - 273.15)) + "; hissedilen " + str(
+                        round(feels_like - 273.15)) + " santigrat derece\n ve " + str(
+                        weather_description))
             else:
-                self.speak(city_name + "için sıcaklık " + str(
-                    round(current_temperature - 273.15)) + "; hissedilen " + str(
-                    round(feels_like - 273.15)) + " santigrat derece\n ve " + str(
-                    weather_description))
-        else:
-            self.speak("Bir hata oluştu")
+                self.speak("Bir hata oluştu")
     def systemVolume(self, op):
         result = osascript.osascript('get volume settings')
         print(result)
@@ -245,7 +246,7 @@ class Command():
         if command == "NASILSIN" or command == "NE HABER":
             self.nasılsın()
 
-        if command == "SAAT KAÇ" or command == "SAATİ SÖYLE":
+        if command == "SAAT":
             self.saat()
 
         if command == "WIKIPEDIA" or command == "VIKIPEDI":
