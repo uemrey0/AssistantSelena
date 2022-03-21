@@ -38,8 +38,8 @@ def listen():
         data = r.recognize_google(audio, language='tr')
         print(data)
         command = Command(data)
-        command.findCommand()
-        time.sleep(1)
+        if not command.findCommand():
+            command.commandRun("ANLAMADIM")
         isSelena = False
     except sr.UnknownValueError:
         print("Üzgünüm Dostun ne dediğini anlamadım :(")
@@ -70,7 +70,8 @@ while check_internet():
             sound = data.upper()
             soundBlocks = sound.split()
             if "SELENA" in soundBlocks:
-                listen()
-            time.sleep(1)
+                command = Command(data)
+                if not command.findCommand():
+                    listen()
     except sr.UnknownValueError:
         print(sr.UnknownValueError)

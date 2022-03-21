@@ -1,7 +1,5 @@
-from gettext import translation
-import urllib.request
 import json
-import pandas as pd
+import re
 import webbrowser
 from gtts import gTTS
 from playsound import playsound
@@ -10,15 +8,11 @@ from random import choice, randrange
 import os
 import sys
 import datetime
-import googletrans
 from googletrans import Translator
 import wikipedia
-import requests
 import wolframalpha as wa
-from subprocess import call
 import osascript
 import speedtest
-from lxml import html
 from src.engiene.spell import Spelling
 from src.engiene.weather import Weather
 
@@ -28,6 +22,7 @@ class Command():
         self.r = sr.Recognizer()
         self.sound = inSound
         self.soundBlocks = self.sound.upper()
+        self.soundBlocks = re.sub(r'^.*?SELENA', 'SELENA', self.soundBlocks)
         self.soundBlocksSplit = self.sound.split()
         print(self.soundBlocks)
         self.commands = ["NASILSIN", "NE HABER", "SAAT", "WIKIPEDIA", "VIKIPEDI", "GOOGLE", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "HIZ", "HECELE", "KAPAT"]
@@ -162,7 +157,6 @@ class Command():
                     city_name = x.lower()
                     break
         if city_name != "":
-            obj = Weather()
             cond = Weather.getWeather(city_name)
             current_temperature = cond["curent"]
             feels_like = cond["feels"]
@@ -237,18 +231,18 @@ class Command():
         for command in self.commands:
             if command in self.soundBlocks:
                 self.commandRun(command)
-                break
+                return True
             else:
                 i = i+1
         if len(self.commands) == i:
+            return False
+    def commandRun(self, command):
+        if command == "ANLAMADIM":
             answer = self.wolframSearch(self.sound)
             if(answer != "404"):
                 self.speak(answer)
             else:
-                self.commandRun("ANLAMADIM")
-    def commandRun(self, command):
-        if command == "ANLAMADIM":
-            self.anlamadim()
+                self.anlamadim()
 
         if command == "KAPAT":
             self.kapat()
