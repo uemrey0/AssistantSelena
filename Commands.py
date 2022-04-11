@@ -15,6 +15,7 @@ import osascript
 import speedtest
 from src.engiene.spell import Spelling
 from src.engiene.weather import Weather
+from loguru import logger
 
 class Command():
 
@@ -24,7 +25,7 @@ class Command():
         self.soundBlocks = self.sound.upper()
         self.soundBlocks = re.sub(r'^.*?SELENA', 'SELENA', self.soundBlocks)
         self.soundBlocksSplit = self.sound.split()
-        print(self.soundBlocks)
+        logger.debug("Sound Blocks: " + self.soundBlocks)
         self.commands = ["NASILSIN", "NE HABER", "SAAT", "WIKIPEDIA", "VIKIPEDI", "GOOGLE", "TARAYICIDA", "ŞAKA", "KOMİKLİK", "FIKRA", "HAVA", "SES", "HIZ", "HECELE", "KAPAT"]
 
     # KONUŞMA
@@ -34,24 +35,23 @@ class Command():
         fileName = "sound.mp3"
         tts = gTTS(text=text, lang="tr")
         tts.save(fileName)
-        print(text)
+        logger.info(text)
         playsound(fileName)
         os.remove(fileName)
 
     def listen(self, txt):
         with sr.Microphone() as source:
             self.r.adjust_for_ambient_noise(source)
-            print("Arka plan gürültüsü:" + str(self.r.energy_threshold))
-            print(txt)
+            logger.debug("Arka plan gürültüsü:" + str(self.r.energy_threshold))
+            logger.info(txt)
             self.speak(txt)
             audio = self.r.listen(source)
 
         data = ""
         try:
             data = self.r.recognize_google(audio, language='tr')
-            print(data)
         except sr.UnknownValueError:
-            print("Üzgünüm Dostun ne dediğini anlamadım :(")
+            logger.error("Söylenen anlaşılmadı!")
             playsound('src/sound/error.mp3')
         return data.lower()
 
@@ -60,15 +60,15 @@ class Command():
     def translate(self, txt, to):
         translator = Translator()
         trans = translator.translate(txt,dest=to)
-        print (trans.text)
+        logger.debug("Çeviri: " + trans.text)
         return trans.text
     def wolframSearch(self, query):
-        app_id = "API_KEY"
+        app_id = "RYKQHU-AU92U2P2JL"
         client = wa.Client(app_id)
         res = client.query(self.translate(query,"en"))
         try:
             answer = next(res.results).text
-            print(answer)
+            logger.debug("Wolfram: " + answer)
             return self.translate(answer,"tr")
         except StopIteration:
             return "404"
@@ -94,7 +94,7 @@ class Command():
     def wikipedia(self):
         while True:
             query = self.listen('Wikipedia\'da neyi aramamı istersin?')
-            print(query)
+            logger.debug("Vikipedi sorgusu: " + query)
             if query != "":
                 break
         wikipedia.set_lang("tr")
@@ -109,7 +109,7 @@ class Command():
             if(query == ""):
                 while True:
                     query = self.listen('Google\'da ne aramamı istersin?')
-                    print(query)
+                    logger.debug("Google sorgusu: " + query)
                     if query != "":
                         break
                 query = query.strip().replace(" ", "+")
@@ -122,7 +122,7 @@ class Command():
         if (self.soundBlocks.replace("TARAYICIDA", "").replace("AÇ", "").strip() == ""):
             while True:
                 query = self.listen('Tarayıcıda hangi siteyi açmamı istersin?')
-                print(query)
+                logger.debug("Tarayıcı sorgusu: " + query)
                 if query != "":
                     break
             query = query.strip()
@@ -136,7 +136,6 @@ class Command():
         wordchoose = choice(joke)
         self.speak(wordchoose)
         rand = randrange(1,3)
-        print(rand)
         playsound("src/sound/jokesound"+str(rand)+".mp3")
 
     def havadurumu(self):
@@ -149,24 +148,27 @@ class Command():
                 if x.capitalize() == y["name"]:  
                     foundCity = True
                     city_name = x.lower()
+                    logger.debug("Şehir: "+city_name)
                     break
         if foundCity == False:       
             city_name_split = self.listen("Hangi şehir?").split()
             for x in city_name_split:
                 if x.capitalize() in citiesJson:
                     city_name = x.lower()
+                    logger.debug("Şehir: "+city_name)
                     break
         if city_name != "":
             cond = Weather.getWeather(city_name)
-            current_temperature = cond["curent"]
-            feels_like = cond["feels"]
-            weather_description = cond["desc"]
-            min = cond["min"]
-            max = cond["max"]
+            print (cond)
+            current_temperature = cond[0]
+            feels_like = cond[1]
+            weather_description = cond[2]
+            min_temp = cond[3]
+            max_temp = cond[4]
             if "BUGÜN" in self.soundBlocks:
                 self.speak(city_name + " bugün en yüksek sıcaklık " + str(
-                    round(max - 273.15)) + "; en düşük " + str(
-                    round(min - 273.15)) + " santigrat derece\n ve " + str(
+                    round(max_temp - 273.15)) + "; en düşük " + str(
+                    round(min_temp - 273.15)) + " santigrat derece\n ve " + str(
                     weather_description))
             else:
                 self.speak(city_name + " için sıcaklık " + str(
@@ -177,8 +179,7 @@ class Command():
             self.speak("Bir hata oluştu")
     def systemVolume(self, op):
         result = osascript.osascript('get volume settings')
-        print(result)
-        print(type(result))
+        logger.debug("Ses ayarları: " + result)
         volInfo = result[1].split(',')
         outputVol = volInfo[0].replace('output volume:', '')
         target_volume = int(outputVol)
@@ -207,7 +208,7 @@ class Command():
             op = "max"
         elif "SUSTUR" in self.soundBlocks or "KAPAT" in self.soundBlocks or "SESSİZ" in self.soundBlocks or "0" in self.soundBlocks or "SIFIR" in self.soundBlocks:
             op = "min"
-        print(op)
+        logger.debug("İşlem: " + op)
         self.systemVolume(op)
     def speedtest(self):
         st = speedtest.Speedtest()

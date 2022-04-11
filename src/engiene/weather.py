@@ -14,9 +14,9 @@ class Weather():
             feels_like = y["feels_like"]
             z = x["weather"]
             weather_description = z[0]["description"]
-            min = y["temp_min"]
-            max = y["temp_max"]
-            value = {"curent":current_temperature,"feels":feels_like,"desc":weather_description,"min":min,"max":max}
+            min_temp = y["temp_min"]
+            max_temp = y["temp_max"]
+            value = [current_temperature,feels_like,weather_description,min_temp,max_temp]
             return value
         else:
             return "404"
