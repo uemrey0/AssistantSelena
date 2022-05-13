@@ -1,4 +1,4 @@
-# Assistant Selena [![GitHub release](https://badgen.net/github/release/uemrey0/AssistantSelena)](https://github.com/uemrey0/AssistantSelena/releases/) [![GitHub release](https://img.shields.io/github/last-commit/uemrey0/AssistantSelena.svg)](https://github.com/uemrey0/AssistantSelena/commit/)
+# Assistant Selena [![GitHub release](https://badgen.net/github/release/uemrey0/AssistantSelena)](https://github.com/uemrey0/AssistantSelena/releases/) [![GitHub last commit](https://img.shields.io/github/last-commit/uemrey0/AssistantSelena.svg)](https://github.com/uemrey0/AssistantSelena/commit/) [![GitHub licance](https://img.shields.io/github/license/uemrey0/AssistantSelena)](https://github.com/uemrey0/AssistantSelena/blob/master/LICENSE)
 
 Selena is a voice commanding assistant service in Python 3.10 It can recognize human speech, talk to user and execute basic commands in Turkish language. Cammands are texted as Turkish. Multi-language not supported for now.
 
