@@ -1,0 +1,10 @@
+gTTS
+playsound==1.3.0
+SpeechRecognition
+googletrans
+wikipedia
+wolframalpha
+osascript
+speedtest
+loguru
+requests
