@@ -2,11 +2,12 @@
 
 Selena is a voice commanding assistant service in Python 3.10 It can recognize human speech, talk to user and execute basic commands in Turkish language. Cammands are texted as Turkish. Multi-language not supported for now.
 
-## Requirements
+### Requirements
 
+- MacOS (developed on version 12.3.1)
 - Python Version: 3.10 ![Python version](https://img.shields.io/github/pipenv/locked/python-version/uemrey0/AssistantSelena)
 
-## Assistant Skills
+### Assistant Skills
 
 - Opens a web page (e.g 'Selena tarayıcıda youtube aç')
 - Search in google (e.g 'Selena Google'da mantarlar ara')
@@ -20,10 +21,38 @@ Selena is a voice commanding assistant service in Python 3.10 It can recognize h
 - (NEW) Do basic calculations (e.g 'Selena bir artı bir')
 - (NEW) Answers in general questions (via call Wolfram API and Google Translate), e.g ('Selena en yüksek bina nerededir?')
 
-## Assistant Features
+### Assistant Features
 
 - Asynchronous command execution & speech recognition and interpretation
 - Supports one user input modes (just speech)
 - One type of sound that is gTTS
 - Log preview in console
 - Vocal or/and text response
+
+### Installing dependencies
+*Note*: You can skip this step, if you are installing the packages. 
+Dependencies are listed below and in the `requirements.txt` file.
+
+* gTTS
+* playsound
+* SpeechRecognition
+* googletrans
+* wikipedia
+* wolframalpha
+* osascript
+* speedtest
+* loguru
+* requests
+
+Install one of python package managers in your distro. If you install pip, then you can install the dependencies by running 
+`pip3 install -r requirements.txt` 
+
+### Installation
+
+A `setup.py` file is provided in the repository. You can run `sudo python3 setup.py install` to install it at system level.
+If you don't have privileges to do so, you can install it at user level by running `python3 setup.py install --user`.  
+
+### Contributing to the repository.
+* If you find any problem with the code, please feel free to open an issue.
+* Found something you can improve, please send me a pull request with your changes.
+I will be more than happy to review and approve them.
